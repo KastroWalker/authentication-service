@@ -1,0 +1,1 @@
+rootProject.name = "com.kastro.authentication-service"
