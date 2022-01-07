@@ -15,7 +15,7 @@ class UserTest: StringSpec({
     val password = "passwordtest"
 
     "Should create an user" {
-        val user = User(name, username, email, password)
+        val user = User(name = name, username = username, email =  email, password =  password)
 
         user.id.shouldNotBeEmpty()
         user.name.shouldBe(name)
@@ -27,40 +27,40 @@ class UserTest: StringSpec({
 
     "Should not create with an invalid name" {
         shouldThrow<ConstraintViolationException> {
-            User("a", username, email, password)
+            User(name = "a", username = username, email =  email, password = password)
         }
 
         val invalidName = "a".repeat(201)
         shouldThrow<ConstraintViolationException> {
-            User(invalidName, username, email, password)
+            User(name = invalidName, username = username, email =  email, password =  password)
         }
     }
 
     "Should not create with an invalid username" {
         shouldThrow<ConstraintViolationException> {
-            User(name, "a", email, password)
+            User(name = name, username = "a", email =  email, password =  password)
         }
 
         val invalidUsername = "a".repeat(51)
         shouldThrow<ConstraintViolationException> {
-            User(name, invalidUsername, email, password)
+            User(name = name, username = invalidUsername, email =  email, password =  password)
         }
     }
 
     "Should not create with an invalid email" {
         shouldThrow<ConstraintViolationException> {
-            User(name, username, "a", password)
+            User(name = name, username = username, email =  "a", password =  password)
         }
     }
 
     "Should not create with an invalid password" {
         shouldThrow<ConstraintViolationException> {
-            User(name, username, email, "a")
+            User(name = name, username = username, email =  email, password =  "a")
         }
 
         val invalidPassword = "a".repeat(51)
         shouldThrow<ConstraintViolationException> {
-            User(name, username, email, invalidPassword)
+            User(name = name, username = username, email =  email, password = invalidPassword)
         }
     }
 })

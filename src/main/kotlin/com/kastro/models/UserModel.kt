@@ -8,5 +8,9 @@ object UserModel: Table("users") {
     val name: Column<String> = char("name", 200)
     val username: Column<String> = char("username", 50)
     val email: Column<String> = char("email", 200)
-    val password: Column<String> = char("password", 50)
+    val password: Column<String> = char("password", 60)
+    init {
+        index(true, email)
+        index(true, username)
+    }
 }

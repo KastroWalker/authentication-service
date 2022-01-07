@@ -10,19 +10,13 @@ import java.util.*
 
 @Serializable
 data class User(
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
     val name: String,
     val username: String,
     val email: String,
     var password: String,
 ) {
-    constructor(name: String, username: String, email: String, password: String) : this(
-        UUID.randomUUID().toString(),
-        name,
-        username,
-        email,
-        password
-    ) {
+    init {
         validate(this) {
             validate(User::name).isNotEmpty().hasSize(3, 200)
             validate(User::username).isNotEmpty().hasSize(3, 50)
@@ -30,6 +24,6 @@ data class User(
             validate(User::password).isNotEmpty().hasSize(8, 50)
         }
 
-        this.password = hashPassword(password)
+        this.password = hashPassword(this.password)
     }
 }
