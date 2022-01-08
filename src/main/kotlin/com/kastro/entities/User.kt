@@ -14,16 +14,5 @@ data class User(
     val name: String,
     val username: String,
     val email: String,
-    var password: String,
-) {
-    init {
-        validate(this) {
-            validate(User::name).isNotEmpty().hasSize(3, 200)
-            validate(User::username).isNotEmpty().hasSize(3, 50)
-            validate(User::email).isNotEmpty().isEmail()
-            validate(User::password).isNotEmpty().hasSize(8, 50)
-        }
-
-        this.password = hashPassword(this.password)
-    }
-}
+    var password: String? = null,
+)

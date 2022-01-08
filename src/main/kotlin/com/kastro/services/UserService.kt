@@ -2,6 +2,7 @@ package com.kastro.services
 
 import com.kastro.entities.User
 import com.kastro.repositories.UserRepository
+import com.kastro.utils.hashPassword
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 
@@ -19,6 +20,8 @@ class UserService {
 
     fun create(user: User): UserReponse? {
         try {
+            user.password = hashPassword(user.password!!)
+
             val userCreated = repository.create(user)
 
             if (userCreated) {

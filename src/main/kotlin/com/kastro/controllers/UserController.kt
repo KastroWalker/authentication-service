@@ -2,6 +2,7 @@ package com.kastro.controllers
 
 import com.kastro.entities.User
 import com.kastro.services.UserService
+import com.kastro.strategies.UserRequestInsert
 import com.kastro.utils.DuplicatedProperty
 import com.kastro.utils.InvalidProperty
 import io.ktor.application.*
@@ -19,6 +20,7 @@ private val logger = KotlinLogging.logger {}
 fun Route.userRoute() {
     route("/users") {
         createUser()
+        updateUser()
         getUsers()
     }
 }
@@ -27,6 +29,8 @@ fun Route.createUser() {
     post {
         try {
             val user = call.receive<User>()
+
+            UserRequestInsert.validate(user)
 
             val response = service.create(user)
 
@@ -39,6 +43,12 @@ fun Route.createUser() {
             throw Exception()
         } catch (exception: ConstraintViolationException) {
             logger.error { "Error creating user: $exception" }
+            val exceptionValues = exception.constraintViolations.first()
+            if (exceptionValues.constraint.name == "NotNull" && exceptionValues.property == "password") {
+                return@post call.respondText(
+                "You must provide a {name, username, email, password}", status = HttpStatusCode.PaymentRequired
+                )
+            }
             return@post call.respondText(
                 InvalidProperty(exception).getMessage(), status = HttpStatusCode.UnprocessableEntity
             )
@@ -55,6 +65,21 @@ fun Route.createUser() {
         } catch (exception: Exception) {
             logger.error { "Error creating user: $exception" }
             return@post call.respondText("Error creating user", status = HttpStatusCode.InternalServerError)
+        }
+    }
+}
+
+fun Route.updateUser() {
+    put {
+        try {
+            // @TODO: Get user id from Token
+
+            val user = call.receive<User>()
+
+            print(user)
+            return@put call.respondText("HELLO")
+        } catch (exception: Exception) {
+            logger.error { "Error updating user: $exception" }
         }
     }
 }
