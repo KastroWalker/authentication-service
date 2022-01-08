@@ -1,12 +1,12 @@
 package com.kastro.repositories
 
-import com.kastro.config.initDatabase
 import com.kastro.entities.User
 import com.kastro.models.UserModel
-import com.kastro.utils.DuplicatedProperty
+import com.kastro.utils.exceptions.DuplicatedProperty
 import mu.KotlinLogging
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
@@ -54,21 +54,29 @@ class UserRepository {
             return edition == 1
         } catch (exception: ExposedSQLException) {
             logger.error { "Error saving user during update: $exception" }
+            val isUniqueConstraintError = exception.sqlState == "23505"
+
+            if (isUniqueConstraintError) {
+                throw DuplicatedProperty(exception)
+            }
+
             throw exception
         } catch (exception: Exception) {
             logger.error { "Error saving user during update: $exception" }
             throw exception
         }
     }
-}
 
-fun main() {
-    initDatabase()
-    val user = User(
-        name = "nametest",
-        username = "usernametest",
-        email = "emailtest@email.com",
-        password = null
-    )
-//    val userUpdated = UserRepository().update("38e55ca0-aa39-40af-b9b8-8dfdcc7ffa28", );
+    fun getUserById(id: String): User? {
+        try {
+            val user = transaction {
+                UserModel.select {UserModel.id eq id}.firstOrNull()
+            } ?: return null
+
+            return UserModel.toUser(user)
+        } catch (exception: Exception) {
+            logger.error { "Error fetching user: $exception" }
+            throw exception
+        }
+    }
 }

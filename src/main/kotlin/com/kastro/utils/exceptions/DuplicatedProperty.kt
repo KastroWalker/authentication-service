@@ -1,8 +1,8 @@
-package com.kastro.utils
+package com.kastro.utils.exceptions
 
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 
-import java.util.regex.*;
+import java.util.regex.*
 
 class DuplicatedProperty (exception: ExposedSQLException) : Exception() {
     var invalidProperty = ""

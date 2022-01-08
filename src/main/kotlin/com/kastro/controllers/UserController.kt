@@ -3,8 +3,10 @@ package com.kastro.controllers
 import com.kastro.entities.User
 import com.kastro.services.UserService
 import com.kastro.strategies.UserRequestInsert
-import com.kastro.utils.DuplicatedProperty
+import com.kastro.strategies.UserRequestUpdate
+import com.kastro.utils.exceptions.DuplicatedProperty
 import com.kastro.utils.InvalidProperty
+import com.kastro.utils.exceptions.UserNotFound
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -29,17 +31,12 @@ fun Route.createUser() {
     post {
         try {
             val user = call.receive<User>()
-
             UserRequestInsert.validate(user)
-
             val response = service.create(user)
-
-            logger.info { "New User created: $response" }
-
             if (response != null) {
+                logger.info { "New User created: $response" }
                 return@post call.respond(status = HttpStatusCode.Created, response)
             }
-
             throw Exception()
         } catch (exception: ConstraintViolationException) {
             logger.error { "Error creating user: $exception" }
@@ -73,13 +70,42 @@ fun Route.updateUser() {
     put {
         try {
             // @TODO: Get user id from Token
-
+            val id = call.parameters["id"] ?: return@put call.respondText(
+                "An id is required",
+                status = HttpStatusCode.PaymentRequired
+            )
             val user = call.receive<User>()
-
-            print(user)
-            return@put call.respondText("HELLO")
-        } catch (exception: Exception) {
+            UserRequestUpdate.validate(user)
+            val response = service.update(id, user)
+            if (response != null) {
+                logger.info { "User updated: $response" }
+                return@put call.respond(status = HttpStatusCode.OK, response)
+            }
+            throw Exception()
+        } catch (exception: ConstraintViolationException) {
             logger.error { "Error updating user: $exception" }
+            return@put call.respondText(
+                InvalidProperty(exception).getMessage(), status = HttpStatusCode.UnprocessableEntity
+            )
+        } catch (exception: SerializationException) {
+            logger.error { "Error updating user: $exception" }
+            return@put call.respondText(
+                "You must provide a {name, username, email}", status = HttpStatusCode.PaymentRequired
+            )
+        } catch (exception: DuplicatedProperty) {
+            logger.error { "Error updating user: $exception" }
+            return@put call.respondText(
+                "The [${exception.invalidProperty}] already exists", status = HttpStatusCode.UnprocessableEntity
+            )
+        } catch (exception: UserNotFound) {
+            logger.error { "Error updating user: $exception" }
+            return@put call.respondText(
+                "The User with id ${exception.id} not exist",
+                status = HttpStatusCode.NotFound
+            )
+        } catch (exception: Exception) {
+                logger.error { "Error updating user: $exception" }
+                return@put call.respondText("Error updating user", status = HttpStatusCode.InternalServerError)
         }
     }
 }

@@ -8,6 +8,7 @@ val exposedVersion: String by project
 val postgresqlVersion: String by project
 val dotenvVersion: String by project
 val loggingVersion: String by project
+val kotlinFakerVersion: String by project
 
 plugins {
     application
@@ -42,6 +43,7 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgresqlVersion")
     implementation("io.github.cdimascio:dotenv-kotlin:$dotenvVersion")
     implementation("io.github.microutils:kotlin-logging:$loggingVersion")
+    implementation("io.github.serpro69:kotlin-faker:$kotlinFakerVersion")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
