@@ -4,8 +4,8 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 import java.util.regex.*;
 
-class DuplicatedProperty (private val exception: ExposedSQLException) : Exception() {
-    var invalidProperties = "mutableListOf<String>()"
+class DuplicatedProperty (exception: ExposedSQLException) : Exception() {
+    var invalidProperty = ""
 
     init {
         val message = exception.message.toString()
@@ -15,7 +15,7 @@ class DuplicatedProperty (private val exception: ExposedSQLException) : Exceptio
 
         while (matcher.find())
         {
-            this.invalidProperties = matcher.group(1).split(",").toMutableList()[0]
+            this.invalidProperty = matcher.group(1).split(",").toMutableList()[0]
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.kastro.repositories
 
-import com.kastro.config.initDatabase
+//import com.kastro.config.initDatabase
 import com.kastro.entities.User
 import com.kastro.models.UserModel
 import com.kastro.utils.DuplicatedProperty
@@ -26,16 +26,14 @@ class UserRepository {
 
             return insertion.insertedCount == 1
         } catch (exception: ExposedSQLException) {
+            logger.error { "Error saving user: $exception" }
             val isUniqueConstraintError = exception.sqlState == "23505"
 
             if (isUniqueConstraintError) {
                 throw DuplicatedProperty(exception)
             }
 
-            return false
-        } catch (exception: Exception) {
-            logger.error { "Error saving user: $exception" }
-            return false
+            throw exception
         }
     }
 }
