@@ -3,8 +3,10 @@ package com.kastro.repositories
 import com.kastro.entities.User
 import com.kastro.models.UserModel
 import com.kastro.utils.exceptions.DuplicatedProperty
+import com.kastro.utils.exceptions.UserNotFound
 import mu.KotlinLogging
 import org.jetbrains.exposed.exceptions.ExposedSQLException
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -67,7 +69,7 @@ class UserRepository {
         }
     }
 
-    fun getUserById(id: String): User? {
+    fun getById(id: String): User? {
         try {
             val user = transaction {
                 UserModel.select {UserModel.id eq id}.firstOrNull()
@@ -76,6 +78,23 @@ class UserRepository {
             return UserModel.toUser(user)
         } catch (exception: Exception) {
             logger.error { "Error fetching user: $exception" }
+            throw exception
+        }
+    }
+
+    fun remove(id: String): Boolean {
+        try {
+            val deleting = transaction {
+                UserModel.deleteWhere { UserModel.id eq id }
+            }
+
+            if(deleting == 0) {
+                throw UserNotFound(id)
+            }
+
+            return true
+        } catch (exception: Exception) {
+            logger.error { "Error deleting user: $exception" }
             throw exception
         }
     }

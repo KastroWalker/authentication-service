@@ -30,7 +30,7 @@ class UserService {
 
     fun update(id: String, user: User): UserResponse? {
         try {
-            repository.getUserById(id) ?: throw UserNotFound(id)
+            repository.getById(id) ?: throw UserNotFound(id)
 
             val userUpdated = repository.update(id, user)
 
@@ -41,6 +41,15 @@ class UserService {
             return null
         } catch (exception: Exception) {
             logger.error { "Error updating user: $exception" }
+            throw exception
+        }
+    }
+
+    fun remove(id: String): Boolean {
+        try {
+            return repository.remove(id)
+        } catch (exception: Exception) {
+            logger.error { "Error deleting user: $exception" }
             throw exception
         }
     }
