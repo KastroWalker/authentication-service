@@ -98,4 +98,17 @@ class UserRepository {
             throw exception
         }
     }
+
+    fun getByUsername(username: String): User? {
+        try {
+            val user = transaction {
+                UserModel.select {UserModel.username eq username}.firstOrNull()
+            } ?: return null
+
+            return UserModel.toUser(user)
+        } catch (exception: Exception) {
+            logger.error { "Error fetching user: $exception" }
+            throw exception
+        }
+    }
 }

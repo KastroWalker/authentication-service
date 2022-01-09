@@ -1,5 +1,6 @@
 package com.kastro.plugins
 
+import com.kastro.controllers.loginRoute
 import com.kastro.controllers.userRoute
 import io.ktor.routing.*
 import io.ktor.application.*
@@ -11,5 +12,6 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
         userRoute()
+        loginRoute()
     }
 }

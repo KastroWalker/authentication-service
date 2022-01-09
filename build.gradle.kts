@@ -44,6 +44,8 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:$dotenvVersion")
     implementation("io.github.microutils:kotlin-logging:$loggingVersion")
     implementation("io.github.serpro69:kotlin-faker:$kotlinFakerVersion")
+    implementation("io.ktor:ktor-auth:$ktorVersion")
+    implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
