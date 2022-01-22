@@ -11,14 +11,14 @@ import mu.KotlinLogging
 class LoginService {
     private val dotenv = dotenv()
     private val userRepository = UserRepository()
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
     private val jwtConfig = JWTConfig(dotenv["SECRET_KEY"])
 
     fun login(login: Login): String {
         try {
             val user = userRepository.getByUsername(login.username) ?: throw UserNotFound()
 
-            if(!verifyHashPassword(login.password, user.password!!)) {
+            if (!verifyHashPassword(login.password, user.password!!)) {
                 throw UserNotFound()
             }
 

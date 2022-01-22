@@ -47,5 +47,5 @@ class JWTConfig(jwtSecret: String) {
     }
 
     @Serializable
-    data class JwtUser(val id: String, val username: String): Principal
+    data class JwtUser(val id: String, val username: String) : Principal
 }

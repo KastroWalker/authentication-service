@@ -14,6 +14,7 @@ plugins {
     application
     kotlin("jvm") version "1.5.31"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 tasks.withType<Test> {
@@ -28,6 +29,12 @@ application {
 
 repositories {
     mavenCentral()
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.kastro.ApplicationKt"
+    }
 }
 
 dependencies {

@@ -47,7 +47,7 @@ fun Route.createUser() {
             val exceptionValues = exception.constraintViolations.first()
             if (exceptionValues.constraint.name == "NotNull" && exceptionValues.property == "password") {
                 return@post call.respondText(
-                "You must provide a {name, username, email, password}", status = HttpStatusCode.PaymentRequired
+                    "You must provide a {name, username, email, password}", status = HttpStatusCode.PaymentRequired
                 )
             }
             return@post call.respondText(

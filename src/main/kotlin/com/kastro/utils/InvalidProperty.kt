@@ -2,7 +2,7 @@ package com.kastro.utils
 
 import org.valiktor.ConstraintViolationException
 
-class InvalidProperty (
+class InvalidProperty(
     private val exception: ConstraintViolationException
 ) {
     fun getMessage(): String {

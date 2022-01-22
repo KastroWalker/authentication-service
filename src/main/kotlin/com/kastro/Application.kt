@@ -1,9 +1,12 @@
 package com.kastro
 
+import com.kastro.config.initDatabase
+import com.kastro.plugins.configureHTTP
+import com.kastro.plugins.configureRouting
+import com.kastro.plugins.configureSecurity
+import com.kastro.plugins.configureSerialization
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import com.kastro.plugins.*
-import com.kastro.config.initDatabase
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {

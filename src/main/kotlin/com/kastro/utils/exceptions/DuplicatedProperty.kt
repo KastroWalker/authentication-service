@@ -1,10 +1,9 @@
 package com.kastro.utils.exceptions
 
 import org.jetbrains.exposed.exceptions.ExposedSQLException
+import java.util.regex.Pattern
 
-import java.util.regex.*
-
-class DuplicatedProperty (exception: ExposedSQLException) : Exception() {
+class DuplicatedProperty(exception: ExposedSQLException) : Exception() {
     var invalidProperty = ""
 
     init {
@@ -13,8 +12,7 @@ class DuplicatedProperty (exception: ExposedSQLException) : Exception() {
         val pattern = Pattern.compile(regex)
         val matcher = pattern.matcher(message)
 
-        while (matcher.find())
-        {
+        while (matcher.find()) {
             this.invalidProperty = matcher.group(1).split(",").toMutableList()[0]
         }
     }

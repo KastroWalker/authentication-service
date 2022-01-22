@@ -1,8 +1,8 @@
 package com.kastro.plugins
 
-import io.ktor.http.*
-import io.ktor.features.*
 import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
 
 fun Application.configureHTTP() {
     install(CORS) {

@@ -46,7 +46,7 @@ class UserRepository {
     fun update(id: String, user: User): Boolean {
         try {
             val edition = transaction {
-                UserModel.update({UserModel.id eq id}) {
+                UserModel.update({ UserModel.id eq id }) {
                     it[name] = user.name
                     it[username] = user.username
                     it[email] = user.email
@@ -72,7 +72,7 @@ class UserRepository {
     fun getById(id: String): User? {
         try {
             val user = transaction {
-                UserModel.select {UserModel.id eq id}.firstOrNull()
+                UserModel.select { UserModel.id eq id }.firstOrNull()
             } ?: return null
 
             return UserModel.toUser(user)
@@ -88,7 +88,7 @@ class UserRepository {
                 UserModel.deleteWhere { UserModel.id eq id }
             }
 
-            if(deleting == 0) {
+            if (deleting == 0) {
                 throw UserNotFound(id)
             }
 
@@ -102,7 +102,7 @@ class UserRepository {
     fun getByUsername(username: String): User? {
         try {
             val user = transaction {
-                UserModel.select {UserModel.username eq username}.firstOrNull()
+                UserModel.select { UserModel.username eq username }.firstOrNull()
             } ?: return null
 
             return UserModel.toUser(user)

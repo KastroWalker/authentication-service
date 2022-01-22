@@ -22,7 +22,7 @@ fun Route.loginRoute() {
                 return@post call.respond(token)
             } catch (exception: UserNotFound) {
                 logger.error { "Error when logging in: $exception" }
-              return@post call.respondText("Invalid credentials", status = HttpStatusCode.Unauthorized)
+                return@post call.respondText("Invalid credentials", status = HttpStatusCode.Unauthorized)
             } catch (exception: Exception) {
                 logger.error { "Error when logging in: $exception" }
                 return@post call.respondText("Error trying to login", status = HttpStatusCode.InternalServerError)
