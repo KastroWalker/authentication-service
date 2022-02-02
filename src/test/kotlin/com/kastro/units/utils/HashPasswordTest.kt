@@ -1,4 +1,4 @@
-package com.kastro.units
+package com.kastro.units.utils
 
 import com.kastro.utils.hashPassword
 import com.kastro.utils.verifyHashPassword
